@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ * fields = {"mail"},
+ * message = "Email déjà utilisé, veuillez taper un autre email !")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -19,18 +24,39 @@ class User
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 50,
+     *      minMessage = "Your Username name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your Username name cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
      */
-    private $pseudo;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Email(
+     *      message = "The email '{{ value }}' is not a valid email."
+     * )
      */
     private $mail;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 50,
+     *      minMessage = "Your Password must be at least {{ limit }} characters long",
+     *      maxMessage = "Your Password cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
      */
     private $password;
+    /**
+     * @Assert\EqualTo(propertyPath="password") 
+     */
+    public $confirm_password;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -47,14 +73,14 @@ class User
         return $this->id;
     }
 
-    public function getPseudo(): ?string
+    public function getUsername(): ?string
     {
-        return $this->pseudo;
+        return $this->username;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setUsername(string $username): self
     {
-        $this->pseudo = $pseudo;
+        $this->username = $username;
 
         return $this;
     }
@@ -106,4 +132,23 @@ class User
 
         return $this;
     }
+
+    public function eraseCredentials(){} //fonction vide obligatoire pour l'implémentation 
+
+    public function getSalt(){} // idem
+
+    public function getRoles(): array // idem 
+    {
+       //$roles = $this->roles;
+       //$roles[] = 'ROLE_USER'; //par défaut chaque user à un ROLE_USER
+       //return array_unique($roles);
+       return ['ROLE_USER'];
+    }
+
+   /* public function setRoles(string $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }*/
 }
