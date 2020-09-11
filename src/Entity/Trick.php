@@ -40,7 +40,7 @@ class Trick
     private $update_date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="trick")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
@@ -51,7 +51,7 @@ class Trick
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $images;
 
