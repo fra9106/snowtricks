@@ -29,14 +29,20 @@
                   <a class="nav-link" href="{{ path('tricks.index')}}">Tricks</a>
                   <span class="nav-link text-dark">|</span>
                 </li>
+                {% if not app.user %}
                 <li class="nav-item d-flex">
-                    <a class="nav-link" href="#">Sign in</a>
+                    <a class="nav-link" href="{{ path('security_login') }}">Sign in</a>
                     <span class="nav-link text-dark">|</span>
-                  </li>
-                  <li class="nav-item d-flex">
-                    <a class="nav-link" href="#">Sign up</a>
-                  </li>
-                
+                </li>
+                </li>
+                <li class="nav-item d-flex">
+                    <a class="nav-link" href="{{ path('security_registration') }}">Sign up</a>
+                </li>
+                {% else %}
+                <li class="nav-item d-flex">
+                  <a class="nav-link" href="{{ path('security_logout') }}">Logout</a>
+                </li>
+                {% endif %}
             </div>
           </nav>
         {% block body %}{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container mt-4 text-center"><br>
+    <h1>Resistration</h1><br><br><br>
+    
+    {{ form_start(form) }}
+    
+    {{ form_row(form.username, {'label' : "Username", 'attr' : {'placeholder': "Pseudo"}}) }}<br>
+    {{ form_row(form.mail, {'label' : "Email", 'attr' : {'placeholder': "Votre email"}}) }}<br>
+    {{ form_row(form.password, {'label' : "Password", 'attr' : {'placeholder': "Mot depasse"}}) }}<br>
+    {{ form_row(form.confirm_password, {'label' : "Confirm Password", 'attr' : {'placeholder': "Confirmez Mot de passe"}}) }}<br><br><br>
+    
+    <button class="btn btn-success">Create an account</button><br><br><br><br><br><br>
+    
+    {{ form_end(form) }}
+    </div>
+
+{% endblock %}
