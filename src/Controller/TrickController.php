@@ -33,6 +33,8 @@ class TrickController extends AbstractController
     public function new(Request $request): Response
     {
         $trick = new Trick();
+        $trick->setCreationDate(new \Datetime());
+        
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
@@ -79,6 +81,7 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick): Response
     {
+        $trick->setUpdateDate(new \Datetime());
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 

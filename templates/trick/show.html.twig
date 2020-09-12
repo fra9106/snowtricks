@@ -21,11 +21,11 @@
             </tr>
             <tr>
                 <th>Creation_date</th>
-                <td>{{ trick.creationDate ? trick.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trick.creationDate ? trick.creationDate|date('d/m/Y') : '' }}</td>
             </tr>
             <tr>
                 <th>Update_date</th>
-                <td>{{ trick.updateDate ? trick.updateDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trick.updateDate ? trick.updateDate|date('d/m/Y') : '' }}</td>
             </tr>
         </tbody>
     </table>

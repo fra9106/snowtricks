@@ -19,9 +19,6 @@ class TrickType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                     'choice_label' => 'category'
-                       
-                    
-            
             ])
             ->add('description')
             ->add('images', FileType::class, [
