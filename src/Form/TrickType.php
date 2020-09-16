@@ -29,8 +29,7 @@ class TrickType extends AbstractType
                 'required' => false,
                 
             ])
-            //->add('username')
-            
+           
             
         ;
     }

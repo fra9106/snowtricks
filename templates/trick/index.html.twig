@@ -11,7 +11,9 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Category</th>
                 <th>Description</th>
+                <th>author</th>
                 <th>Creation_date</th>
                 <th>Update_date</th>
                 <th>actions</th>
@@ -22,7 +24,9 @@
             <tr>
                 <td>{{ trick.id }}</td>
                 <td>{{ trick.name }}</td>
+                <td>{{ trick.category.category }}</td>
                 <td>{{ trick.description }}</td>
+                <td>{{ trick.user.pseudo }}</td>
                 <td>{{ trick.creationDate ? trick.creationDate|date('d/m/Y') : '' }}</td>
                 <td>{{ trick.updateDate ? trick.updateDate|date('d/m/Y') : '' }}</td>
                 <td>

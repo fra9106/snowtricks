@@ -65,10 +65,7 @@ class Trick
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
-   
     
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
