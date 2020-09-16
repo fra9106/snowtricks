@@ -34,7 +34,7 @@ class User implements UserInterface
      *      allowEmptyString = false
      * )
      */
-    private $username;
+    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -91,14 +91,14 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getPseudo(): ?string
     {
-        return $this->username;
+        return $this->pseudo;
     }
 
-    public function setUsername(string $username): self
+    public function setPseudo(string $pseudo): self
     {
-        $this->username = $username;
+        $this->pseudo = $pseudo;
 
         return $this;
     }
@@ -186,7 +186,12 @@ class User implements UserInterface
 
     public function getSalt(){} // idem
 
-    public function getRoles(): array // idem 
+    public function getUsername()
+    {
+        return $this->mail;
+    }
+
+    public function getRoles(): array 
     {
        //$roles = $this->roles;
        //$roles[] = 'ROLE_USER'; //par défaut chaque user à un ROLE_USER
