@@ -6,6 +6,7 @@ use App\Entity\Trick;
 use App\Entity\Images;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
+use App\Security\Voter\TrickVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,6 +84,7 @@ class TrickController extends AbstractController
                 */
                 public function edit(Request $request, Trick $trick): Response
                 {
+                    $this->denyAccessUnlessGranted(TrickVoter::EDIT, $trick);
                     $trick->setUpdateDate(new \Datetime());
                     
                     $form = $this->createForm(TrickType::class, $trick);
