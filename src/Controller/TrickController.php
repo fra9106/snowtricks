@@ -34,7 +34,7 @@ class TrickController extends AbstractController
     {
         $trick = new Trick();
         $trick->setCreationDate(new \Datetime());
-        
+    
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
