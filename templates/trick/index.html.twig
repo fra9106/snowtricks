@@ -14,8 +14,8 @@
                 <th>Category</th>
                 <th>Description</th>
                 <th>author</th>
-                <th>Creation_date</th>
-                <th>Update_date</th>
+                <th>Creation date</th>
+                <th>Update date</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -31,7 +31,9 @@
                 <td>{{ trick.updateDate ? trick.updateDate|date('d/m/Y') : '' }}</td>
                 <td>
                     <a href="{{ path('trick_show', {'id': trick.id}) }}">show</a>
+                    {% if is_granted('edit', trick) %}
                     <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
+                    {% endif %} 
                 </td>
             </tr>
         {% else %}
