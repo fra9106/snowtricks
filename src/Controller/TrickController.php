@@ -123,6 +123,7 @@ class TrickController extends AbstractController
                 */
                 public function delete(Request $request, Trick $trick): Response
                 {
+                    $this->denyAccessUnlessGranted('ROLE_USER');
                     if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
                         $entityManager = $this->getDoctrine()->getManager();
                         $entityManager->remove($trick);
