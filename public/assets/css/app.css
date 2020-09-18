@@ -35,7 +35,7 @@
   font-size: 20px;
 }
 
-.scroll-to-up .btn {
+.scroll-to-up a {
   width: 3.5rem;
   height: 3.5rem;
   background-color: rgba(33, 37, 41, 0.5);
@@ -56,4 +56,3 @@
 .name-trick {
   text-decoration: underline;
 }
-
