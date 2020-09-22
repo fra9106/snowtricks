@@ -3,43 +3,41 @@
 {% block title %}Trick{% endblock %}
 
 {% block body %}
-<div class="container mt-4 text-center"><br>
-    <h1>Trick</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trick.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ trick.name }}</td>
-            </tr>
-           
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.description }}</td>
-            </tr>
-            <tr>
-                <th>Creation_date</th>
-                <td>{{ trick.creationDate ? trick.creationDate|date('d/m/Y') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Update_date</th>
-                <td>{{ trick.updateDate ? trick.updateDate|date('d/m/Y') : '' }}</td>
-            </tr>
+    <div class="container text-center border">
+    <div class="col-sm-12 mb-4">
+        
+        <div class=" col-sm-12 align-items-center trick-name ">
+            <h2>{{ trick.name }}</h2>
             
-            <tr>
-                <th>Images</th>
                 {% for image in trick.images %}
-                <td><img src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" width="150"></td>{% endfor %}
-            </tr>
-            
-        </tbody>
-    </table>
+                <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >{% endfor %}
+                <div class="align-items-center">
+                    <h3>Description :</h3><p class="text-muted text-justify">{{ trick.description }}</p>
+                    <div class=" align-items-center d-flex text-align-inline justify-content-center  my-4">
+                        <div class="border mx-2 px-2 rounded" >
+                    <h6>Groupe  :</h6><p class="text-muted">{{ trick.category.category }}</p>
+                    </div>
+                        <div class="border mx-2 px-2 rounded" >
+                    <h6>Publié le :</h6><p class="text-muted">{{ trick.creationDate ? trick.creationDate|date('d/m/Y') : '' }} par {{ trick.user.pseudo }}</p>
+                    </div>
+                    {% if trick.updateDate %}
+                    <div class="border mx-2 px-2 rounded " >
+                    <h6>Modifié le :</h6><p class="text-muted">{{ trick.updateDate ? trick.updateDate|date('d/m/Y') : '' }}</p>
+                    {% endif %}
+                        </div>
+                   </div>
+                </div>
+        </div>  
+    </div>
 
-    <a href="{{ path('trick_index') }}">back to list</a>
+    
+   
+   
+   
+   
+   
+   
+    <a href="{{ path('home') }}">back to list</a>
 
     <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
     </div>
