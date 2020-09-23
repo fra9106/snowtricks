@@ -3,6 +3,11 @@
   width: 60%;
 }
 
+.image-tricks {
+  width: 150px;
+  height: 100px;
+}
+
 .hook-text {
   font-size: 28px;
   position: absolute;
@@ -59,7 +64,8 @@
 
 @media (min-width: 992px) {
   .image-trick {
-    width: 800px;
-    height: 400px;
+    width: 900px;
+    height: 450px;
   }
+  
 }
