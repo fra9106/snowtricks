@@ -2,6 +2,6 @@
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
     {% if is_granted('edit', trick) %}
-    <button class="btn"><i class="fas fa-trash-alt"></i></button>
+    <button class="py-0 px-2 btn btn-link text-blue"><i class="fas fa-trash-alt"></i></button>
     {% endif %}
 </form>

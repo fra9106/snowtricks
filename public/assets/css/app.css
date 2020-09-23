@@ -56,3 +56,10 @@
 .name-trick {
   text-decoration: underline;
 }
+
+@media (min-width: 992px) {
+  .image-trick {
+    width: 800px;
+    height: 400px;
+  }
+}
