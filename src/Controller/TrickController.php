@@ -4,14 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Entity\Images;
+use App\Entity\Comment;
 use App\Form\TrickType;
-use App\Repository\TrickRepository;
+use App\Form\CommentType;
 use App\Security\Voter\TrickVoter;
+use App\Repository\TrickRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
 * @Route("/trick")
@@ -70,12 +73,28 @@ class TrickController extends AbstractController
             }
             
             /**
-            * @Route("/{id}", name="trick_show", methods={"GET"})
+            * @Route("/{id}/show", name="trick_show", methods={"GET","POST"})
             */
-            public function show(Trick $trick): Response
+            public function show(Request $request, Trick $trick, EntityManagerInterface $manager): Response
             {
+                $this->denyAccessUnlessGranted('ROLE_USER');
+                $comment = new Comment();
+                $comment->setUser($this->getUser());
+                $form = $this->createForm(CommentType::class, $comment);
+                $form->handleRequest($request);
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $comment->setCreationDate(new \DateTime())
+                            ->setTrick($trick);
+                    $manager->persist($comment);
+                    $manager->flush();
+
+                    return $this->redirectToRoute('trick_show', [
+                        'id' => $trick->getId()
+                    ]);
+                }
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
+                    'commentForm' => $form->createView()
                     ]);
                 }
                 
@@ -119,7 +138,7 @@ class TrickController extends AbstractController
                 }
                 
                 /**
-                * @Route("/{id}", name="trick_delete", methods={"DELETE"})
+                * @Route("/{id}/delete", name="trick_delete", methods={"DELETE"})
                 */
                 public function delete(Request $request, Trick $trick): Response
                 {
