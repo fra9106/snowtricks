@@ -9,6 +9,7 @@ use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Security\Voter\TrickVoter;
 use App\Repository\TrickRepository;
+use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -90,11 +91,14 @@ class TrickController extends AbstractController
 
                     return $this->redirectToRoute('trick_show', [
                         'id' => $trick->getId()
+                
                     ]);
                 }
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
-                    'commentForm' => $form->createView()
+                    'commentForm' => $form->createView(),
+        
+            
                     ]);
                 }
                 
