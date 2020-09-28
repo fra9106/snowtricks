@@ -9,7 +9,6 @@ use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Security\Voter\TrickVoter;
 use App\Repository\TrickRepository;
-use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,7 +75,7 @@ class TrickController extends AbstractController
             /**
             * @Route("/{id}/show", name="trick_show", methods={"GET","POST"})
             */
-            public function show(Request $request, Trick $trick, EntityManagerInterface $manager): Response
+            public function show(Trick $trick): Response
             {
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,

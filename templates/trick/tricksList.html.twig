@@ -13,7 +13,8 @@
                 <div class="col-12 p-0" >
                     <div>
                         {% for image in trick.images | slice(0,1) %}
-                        <img class="h-100 w-100"  src="{{ asset('assets/uploads/' ~ image.name) }}" alt="{{ trick.name }}">{% endfor %}
+                        <img class="h-100 w-100"  src="{{ asset('assets/uploads/' ~ image.name) }}" alt="{{ trick.name }}">
+                        {% endfor %}
                     </div>
                     <div class="d-flex col-12 p-3 name-trick">
                         <div class="d-flex text-align-inline">{{ trick.name }}
