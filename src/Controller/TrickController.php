@@ -101,12 +101,11 @@ class TrickController extends AbstractController
                         $manager->flush();
                         return $this->redirectToRoute('trick_show', [
                             'id' => $trick->getId(),
-                    
                         ]);
                     }
                     return $this->render('trick/show.html.twig', [
                         'trick' => $trick,
-                        'commentForm' => $form->createView()
+                        'form' => $form->createView(),
                         ]);
                 }
                 

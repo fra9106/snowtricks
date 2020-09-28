@@ -8,7 +8,11 @@
         <div class=" col-sm-12 align-items-center trick-name ">
             <h2>{{ trick.name }}</h2>
             {% for image in trick.images | slice(0,1) %}
+            {% if image.name %}
                 <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
+                {% else %}
+                <img class="image-trick rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
+                {% endif %}
                 {% endfor %}
                 <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
                     {% for image in trick.images %}
@@ -34,10 +38,10 @@
                 <hr>
                 {% if app.user %}
                 <div class="align-items-center d-flex text-align-inline justify-content-center  my-4">
-                {{ form_start(commentForm) }}
-                {{ form_row(commentForm.content, {'att': {'placeholder': "My comment"}})}}
+                {{ form_start(form) }}
+                {{ form_row(form.content, {'att': {'placeholder': "My comment"}})}}
                 <button type="submit" class="btn btn-success">leave a comment</button>
-                {{ form_end(commentForm) }}
+                {{ form_end(form) }}
                 </div>
                 {% else %}
                 <h2>Pour laisser un commentaire veuillez vous connecter</h2>
