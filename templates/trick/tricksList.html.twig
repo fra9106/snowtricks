@@ -5,7 +5,11 @@
     {% for trick in tricks %}
         <div class="col-lg-2 col-sm-12 col-md-4 my-3 m-4 tricks-more ">
             <div class="w-100 mx-auto p-2 row border border-lightgrey">
+                {% if app.user %}
+                <a href="{{ path('comment_new', {'id': trick.id}) }}">
+                {% else %}
                 <a href="{{ path('trick_show', {'id': trick.id}) }}">
+                {% endif %}
                 <div class="col-12 p-0" >
                     <div>
                         {% for image in trick.images | slice(0,1) %}
@@ -19,9 +23,8 @@
                             {% endif %}
                         </div>
                     </div>
-               </div> 
-            </a>
-            
+                </div> 
+                </a>
             </div>
         </div>
     {% endfor %}

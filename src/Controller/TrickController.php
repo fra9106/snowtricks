@@ -9,6 +9,7 @@ use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Security\Voter\TrickVoter;
 use App\Repository\TrickRepository;
+use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -77,25 +78,37 @@ class TrickController extends AbstractController
             */
             public function show(Request $request, Trick $trick, EntityManagerInterface $manager): Response
             {
-                $this->denyAccessUnlessGranted('ROLE_USER');
-                $comment = new Comment();
-                $comment->setUser($this->getUser());
-                $form = $this->createForm(CommentType::class, $comment);
-                $form->handleRequest($request);
-                if ($form->isSubmitted() && $form->isValid()) {
-                    $comment->setCreationDate(new \DateTime())
-                            ->setTrick($trick);
-                    $manager->persist($comment);
-                    $manager->flush();
-
-                    return $this->redirectToRoute('trick_show', [
-                        'id' => $trick->getId()
-                    ]);
-                }
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
-                    'commentForm' => $form->createView()
-                    ]);
+               
+                ]);
+                
+            }
+
+                /**
+                * @Route("/{id}/newcomment", name="comment_new", methods={"GET","POST"})
+                */
+                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager) : response
+                {
+                    $this->denyAccessUnlessGranted('ROLE_USER');
+                    $comment = new Comment();
+                    $comment->setUser($this->getUser());
+                    $form = $this->createForm(CommentType::class, $comment);
+                    $form->handleRequest($request);
+                    if ($form->isSubmitted() && $form->isValid()) {
+                        $comment->setCreationDate(new \DateTime())
+                                ->setTrick($trick);
+                        $manager->persist($comment);
+                        $manager->flush();
+                        return $this->redirectToRoute('trick_show', [
+                            'id' => $trick->getId(),
+                    
+                        ]);
+                    }
+                    return $this->render('trick/show.html.twig', [
+                        'trick' => $trick,
+                        'commentForm' => $form->createView()
+                        ]);
                 }
                 
                 /**
