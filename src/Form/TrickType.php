@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +28,11 @@ class TrickType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 
+            ])
+            ->add('videos', UrlType::class, [
+                'label' => 'Add your URL Video',
+                'mapped' => false,
+                'required' => false,
             ])
            
             

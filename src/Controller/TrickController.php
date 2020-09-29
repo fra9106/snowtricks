@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Entity\Images;
+use App\Entity\Videos;
 use App\Entity\Comment;
 use App\Form\TrickType;
 use App\Form\CommentType;
@@ -60,6 +61,14 @@ class TrickController extends AbstractController
                     $img->setName($fichier);
                     $trick->addImage($img);
                 }
+
+                $video = $form->get('videos')->getData();
+                
+                    $url = new Videos();
+                    $url->setUrl($video);
+                    $trick->addVideo($url);
+                    //dd($trick);
+
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($trick);
                 $entityManager->flush();
@@ -80,10 +89,10 @@ class TrickController extends AbstractController
             {
                 $form = $this->createForm(CommentType::class);
                 $form->handleRequest($request);
-                $comments = $repo->findBy([],['creation_date' => 'desc']);
+                $comments = $repo->findBy([],['creation_date' => 'DESC']);
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
-                    'comments' => $comments,
+                    'comment' => $comments,
                     'form' => $form->createView(),
                
                 ]);
@@ -105,10 +114,12 @@ class TrickController extends AbstractController
                                 ->setTrick($trick);
                         $manager->persist($comment);
                         $manager->flush();
+                        
                         return $this->redirectToRoute('trick_show', [
                             'id' => $trick->getId(),
                         ]);
                     }
+                    
                     return $this->render('trick/show.html.twig', [
                         'trick' => $trick,
                         'form' => $form->createView(),
@@ -141,7 +152,13 @@ class TrickController extends AbstractController
                             $img->setName($fichier);
                             $trick->addImage($img);
                         }
-                        
+                        $video = $form->get('videos')->getData();
+                
+                    $url = new Videos();
+                    $url->setUrl($video);
+                    $trick->addVideo($url);
+                    //dd($trick);
+
                         $this->getDoctrine()->getManager()->flush();
                         
                         return $this->redirectToRoute('trick_index'
