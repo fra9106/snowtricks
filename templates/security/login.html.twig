@@ -4,6 +4,11 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
+{% for message in app.flashes('message') %}
+<div class="alert alert-success text-center" role="alert">
+    {{ message }}
+</div>
+{% endfor %}
 <div class="container mt-4 text-center"><br>
     <h1>Login</h1><br><br><br><br>
 <form action="{{ path('security_login') }}" method="post">
