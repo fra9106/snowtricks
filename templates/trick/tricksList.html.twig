@@ -13,7 +13,12 @@
                 <div class="col-12 p-0" >
                     <div>
                         {% for image in trick.images | slice(0,1) %}
-                        <img class="h-100 w-100"  src="{{ asset('assets/uploads/' ~ image.name) }}" alt="{{ trick.name }}">{% endfor %}
+                        {% if image.name %}
+                        <img class="h-100 w-100" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="{{ trick.name }}">
+                        {% else %}
+                        <img src="{{ asset('assets/img_default/logosnow.png') }}" alt="logoSnow" height="100"width="100">
+                        {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="d-flex col-12 p-3 name-trick">
                         <div class="d-flex text-align-inline">{{ trick.name }}
@@ -41,3 +46,6 @@
     <script src="{{ asset('assets/js/loadMoreTricks.js') }}"></script>
     {% endblock %}
 </div>  
+
+
+

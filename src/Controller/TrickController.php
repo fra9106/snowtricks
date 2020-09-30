@@ -10,12 +10,12 @@ use App\Form\CommentType;
 use App\Security\Voter\TrickVoter;
 use App\Repository\TrickRepository;
 use App\Repository\CommentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
 * @Route("/trick")
@@ -76,10 +76,15 @@ class TrickController extends AbstractController
             /**
             * @Route("/{id}/show", name="trick_show", methods={"GET","POST"})
             */
-            public function show(Request $request, Trick $trick, EntityManagerInterface $manager): Response
+            public function show(CommentRepository $repo,Request $request, Trick $trick): Response
             {
+                $form = $this->createForm(CommentType::class);
+                $form->handleRequest($request);
+                $comments = $repo->findBy([],['creation_date' => 'desc']);
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
+                    'comments' => $comments,
+                    'form' => $form->createView(),
                
                 ]);
                 
@@ -88,7 +93,7 @@ class TrickController extends AbstractController
                 /**
                 * @Route("/{id}/newcomment", name="comment_new", methods={"GET","POST"})
                 */
-                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager) : response
+                public function newComment(CommentRepository $repo, Request $request, Trick $trick, EntityManagerInterface $manager) : response
                 {
                     $this->denyAccessUnlessGranted('ROLE_USER');
                     $comment = new Comment();
@@ -102,12 +107,11 @@ class TrickController extends AbstractController
                         $manager->flush();
                         return $this->redirectToRoute('trick_show', [
                             'id' => $trick->getId(),
-                    
                         ]);
                     }
                     return $this->render('trick/show.html.twig', [
                         'trick' => $trick,
-                        'commentForm' => $form->createView()
+                        'form' => $form->createView(),
                         ]);
                 }
                 

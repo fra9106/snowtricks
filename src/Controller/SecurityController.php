@@ -22,7 +22,17 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
+            $avatar = $form->get('avatar')->getData();
+            if($avatar){
+                $fichier = md5(uniqid()) . '.' . $avatar->guessExtension();
+                
+                $avatar->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
+                $user->setAvatar($fichier);
+            }
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
             $manager->persist($user);
