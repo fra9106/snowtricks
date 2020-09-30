@@ -18,6 +18,9 @@
                     {% for image in trick.images %}
                     <img class="image-tricks rounded mx-2" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
                     {% endfor %}
+                    {% for video in trick.videos %}
+                    <iframe class="col-md-3 col-sm-12 h-100 w-100 {{ trick.id }}" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% endfor %}
                 </div>
                 <div class="align-items-center">
                     <h3>Description :</h3><p class="text-muted text-justify">{{ trick.description }}</p>
