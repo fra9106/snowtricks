@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200914120748 extends AbstractMigration
+final class Version20201001110651 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,16 +20,14 @@ final class Version20200914120748 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE trick ADD user_id INT NOT NULL');
-        $this->addSql('ALTER TABLE trick ADD CONSTRAINT FK_D8F0A91EA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('CREATE INDEX IDX_D8F0A91EA76ED395 ON trick (user_id)');
+        $this->addSql('ALTER TABLE trick CHANGE update_date update_date DATETIME NULL');
+        $this->addSql('ALTER TABLE user ADD reset_token VARCHAR(50) DEFAULT NULL, CHANGE avatar avatar VARCHAR(255) NULL');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE trick DROP FOREIGN KEY FK_D8F0A91EA76ED395');
-        $this->addSql('DROP INDEX IDX_D8F0A91EA76ED395 ON trick');
-        $this->addSql('ALTER TABLE trick DROP user_id');
+        $this->addSql('ALTER TABLE trick CHANGE update_date update_date DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE user DROP reset_token, CHANGE avatar avatar VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`');
     }
 }

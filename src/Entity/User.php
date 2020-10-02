@@ -71,6 +71,12 @@ class User implements UserInterface
     private $avatar;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $reset_token;
+
+
+    /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
      */
     private $tricks;
@@ -79,6 +85,8 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
      */
     private $user;
+
+    
 
     public function __construct()
     {
@@ -151,6 +159,18 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getResetToken(): ?string
+   {
+       return $this->reset_token;
+   }
+
+   public function setResetToken(?string $reset_token): self
+   {
+       $this->reset_token = $reset_token;
+
+       return $this;
+   }
+
     /**
      * @return Collection|Trick[]
      */
@@ -205,6 +225,4 @@ class User implements UserInterface
 
         return $this;
     }*/
-
-   
 }
