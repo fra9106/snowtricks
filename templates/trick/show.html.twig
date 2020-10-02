@@ -3,6 +3,11 @@
 {% block title %}Trick{% endblock %}
 
 {% block body %}
+{% for message in app.flashes('message') %}
+<div class="alert alert-success text-center" role="alert">
+    {{ message }}
+</div>
+{% endfor %}
     <div class="container text-center border">
     <div class="col-sm-12 mb-4">
         <div class=" col-sm-12 align-items-center trick-name ">

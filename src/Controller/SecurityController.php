@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $this->addFlash('message', 'Vous êtes enregistré!');
             $avatar = $form->get('avatar')->getData();
             if($avatar){
                 $fichier = md5(uniqid()) . '.' . $avatar->guessExtension();
@@ -39,6 +39,7 @@ class SecurityController extends AbstractController
             $manager->flush();
 
             return $this->redirectToRoute('security_login');
+            
         }
 
 
@@ -54,12 +55,10 @@ class SecurityController extends AbstractController
     public function login()
     {
         return $this->render('security/login.html.twig');
-    
     }
 
     /**
      * @Route("/logout", name="security_logout")
      */
-
-     public function logout(){}
+    public function logout(){}
 }

@@ -47,7 +47,7 @@ class TrickController extends AbstractController
             $form->handleRequest($request);
             
             if ($form->isSubmitted() && $form->isValid()) {
-                
+                $this->addFlash('message', 'Trick added!');
                 $images = $form->get('images')->getData();
                 foreach($images as $image) {
                     $fichier = md5(uniqid()) . '.' . $image->guessExtension();
@@ -110,6 +110,7 @@ class TrickController extends AbstractController
                     $form = $this->createForm(CommentType::class, $comment);
                     $form->handleRequest($request);
                     if ($form->isSubmitted() && $form->isValid()) {
+                        $this->addFlash('message', 'Comment added!');
                         $comment->setCreationDate(new \DateTime())
                                 ->setTrick($trick);
                         $manager->persist($comment);
