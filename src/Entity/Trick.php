@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\TrickRepository;
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @UniqueEntity(
+ * fields = {"name"},
+ * message = "Le nom de cette figure déjà utilisé, veuillez taper une autre nom de figure !")
  */
 class Trick
 {
@@ -40,7 +43,7 @@ class Trick
     private $update_date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="trick")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="trick", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
@@ -61,7 +64,7 @@ class Trick
     private $videos;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="user")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

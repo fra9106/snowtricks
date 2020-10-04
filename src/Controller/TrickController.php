@@ -27,9 +27,9 @@ class TrickController extends AbstractController
     * @Route("/", name="trick_index", methods={"GET"})
     */
     public function index(TrickRepository $trickRepository): Response
-    {
+    { 
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+            'tricks' => $trickRepository->findBy([],['creation_date' => 'DESC'])
             ]);
         }
         
@@ -65,7 +65,7 @@ class TrickController extends AbstractController
                 $video = $form->get('videos')->getData();
                 
                     $url = new Videos();
-                    $url->setUrl($video);
+                    $url->setUrl($video||null);
                     $trick->addVideo($url);
                     //dd($trick);
 
@@ -87,22 +87,23 @@ class TrickController extends AbstractController
             */
             public function show(CommentRepository $repo,Request $request, Trick $trick): Response
             {
-                $form = $this->createForm(CommentType::class);
-                $form->handleRequest($request);
-                $comments = $repo->findBy([],['creation_date' => 'DESC']);
+                //$form = $this->createForm(CommentType::class);
+                //$form->handleRequest($request);
+                //$comments = $repo->findBy([],['creation_date' => 'DESC']);
+               
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
-                    'comment' => $comments,
-                    'form' => $form->createView(),
+                    //'comments' => $comments, 
+                   // 'form' => $form->createView(),
                
-                ]);
+                ]); 
                 
             }
 
                 /**
                 * @Route("/{id}/newcomment", name="comment_new", methods={"GET","POST"})
                 */
-                public function newComment(CommentRepository $repo, Request $request, Trick $trick, EntityManagerInterface $manager) : response
+                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager) : response
                 {
                     $this->denyAccessUnlessGranted('ROLE_USER');
                     $comment = new Comment();
