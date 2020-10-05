@@ -87,14 +87,12 @@ class TrickController extends AbstractController
             */
             public function show(CommentRepository $repo,Request $request, Trick $trick): Response
             {
-                //$form = $this->createForm(CommentType::class);
-                //$form->handleRequest($request);
-                //$comments = $repo->findBy([],['creation_date' => 'DESC']);
-               
+                $form = $this->createForm(CommentType::class);
+                $form->handleRequest($request);
+                
                 return $this->render('trick/show.html.twig', [
                     'trick' => $trick,
-                    //'comments' => $comments, 
-                   // 'form' => $form->createView(),
+                    'form' => $form->createView(),
                
                 ]); 
                 
