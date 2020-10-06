@@ -3,6 +3,10 @@
   width: 60%;
 }
 
+.navbar {
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
+}
+
 .image-tricks {
   width: 150px;
   height: 100px;
@@ -16,10 +20,12 @@
 
 .slider {
   background: url('../img/pic_home.jpg') center center/cover no-repeat;
+  
 }
 
 .masthead {
   height: 900px;
+  z-index: 50;
 }
 
 .scroll-to-down .btn {
@@ -31,7 +37,7 @@
 }
 
 .scroll-to-down {
-  z-index: 1042;
+  z-index: 100;
   right: 1rem;
   bottom: 1rem;
 }
@@ -49,9 +55,9 @@
 }
 
 .scroll-to-up {
-  z-index: 1042;
-  right: 1rem;
-  top: 130rem;
+  z-index: 1;
+  right: 15px;
+  top: 652px;
 }
 
 .fa-chevron-up {
@@ -60,6 +66,10 @@
 
 .name-trick {
   text-decoration: underline;
+}
+
+.margout{
+  margin-right: 0 !important;
 }
 
 @media (min-width: 992px) {
