@@ -54,7 +54,10 @@ class Videos
     {
         return $this->url;
     }
-
+    /**
+     *
+     * @return string|null
+     */
     public function setUrl(string $url): self
     {
         $this->url = $url;
