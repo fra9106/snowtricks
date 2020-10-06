@@ -34,7 +34,7 @@ class Comment
     private $trick;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
