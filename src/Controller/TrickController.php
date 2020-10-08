@@ -58,8 +58,11 @@ class TrickController extends AbstractController
                     );
                     
                     $img = new Images();
-                    $img->setName($fichier);
+                    $img->setName($fichier||null);
                     $trick->addImage($img);
+                    if($img ===null){
+                        $img->move($this->getParameter('img_profile_directory'),$fichier);
+                    }
                 }
 
                 $video = $form->get('videos')->getData();
@@ -155,7 +158,7 @@ class TrickController extends AbstractController
                         $video = $form->get('videos')->getData();
                 
                     $url = new Videos();
-                    $url->setUrl($video);
+                    $url->setUrl($video||null);
                     $trick->addVideo($url);
                     //dd($trick);
 
@@ -189,7 +192,8 @@ class TrickController extends AbstractController
                 /**
                 * @Route("/delete/image/{id}", name="trick_delete_image", methods={"DELETE"})
                 */
-                public function deleteImage(Images $image, Request $request){
+                public function deleteImage(Images $image, Request $request)
+                {
                     $data = json_decode($request->getContent(), true);
                     // We check if the token is valid
                     if($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])){
@@ -207,5 +211,37 @@ class TrickController extends AbstractController
                         return new JsonResponse(['error' => 'Token Invalide'], 400);
                     }
                 }
+
+                /**
+                 * @Route("/delete/video/{id}", name="trick_delete_video", methods={"DELETE"})
+                 */
+                public function deleteVideo(Videos $video, Request $request)
+                {
+                    $this->denyAccessUnlessGranted('ROLE_USER');
+                    if ($this->isCsrfTokenValid('delete'.$video->getId(), $request->request->get('_token'))) {
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->remove($video);
+                        $entityManager->flush();
+                    }
+                    return $this->redirectToRoute('trick_index');
+                }
+
+                /**
+                 * @Route("/delete/videos/{id}", name="trick_delete_videos", methods={"DELETE"})
+                 */
+               /* public function deleteVideos(Videos $video, Request $request)
+                {
+                    $data = json_decode($request->getContent(), true);
+                    if($this->isCsrfTokenValid('delete'.$video->getId(), $data['_token'])){
+                        
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->remove($video);
+                        $entityManager->flush();
+                    
+                    return new JsonResponse(['success' => 1]);
+                }else{
+                    return new JsonResponse(['error' => 'Token Invalide'], 400);
+                }
+            }*/
             }
             

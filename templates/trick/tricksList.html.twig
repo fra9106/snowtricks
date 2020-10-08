@@ -12,13 +12,13 @@
                 {% endif %}
                 <div class="col-12 p-0" >
                     <div>
+                        {% if trick is not empty %}
                         {% for image in trick.images | slice(0,1) %}
-                        {% if image.name %}
                         <img class="h-100 w-100" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="{{ trick.name }}">
-                        {% else %}
-                        <img src="{{ asset('assets/img_default/logosnow.png') }}" alt="logoSnow" height="100"width="100">
-                        {% endif %}
+                        {% else %}{{dump('coucou')}}
+                        <img class="h-100 w-100" src="{{ asset('assets/img_default/logosnow.png') }}" alt="logoSnow">
                         {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="d-flex col-12 p-3 name-trick">
                         <div class="d-flex text-align-inline">{{ trick.name }}
