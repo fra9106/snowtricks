@@ -12,13 +12,13 @@
     <div class="col-sm-12 mb-4">
         <div class=" col-sm-12 align-items-center trick-name ">
             <h2>{{ trick.name }}</h2>
-            {% for image in trick.images | slice(0,1) %}
-            {% if image.name %}
+                {% if trick is not empty %}
+                {% for image in trick.images | slice(0,1) %}
                 <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
                 {% else %}
-                <img class="image-trick rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
-                {% endif %}
+                <img class="image-trick rounded mx-2" src="{{ asset('assets/img_default/logosnow.png') }}" alt="Image">
                 {% endfor %}
+                {% endif %}
                 <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
                     {% for image in trick.images %}
                     <img class="image-tricks rounded mx-2" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
