@@ -2,38 +2,50 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
 use App\Entity\Trick;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\VideoType;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name',TextType::class, [
+                'label' => 'Add trick name'
+            ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                     'choice_label' => 'category'
             ])
-            ->add('description')
-            ->add('images', FileType::class, [
-                'label' => 'Add your Image',
-                'multiple' => true,
-                'mapped' => false,
-                'required' => false,
-                
+            ->add('description', TextareaType::class, [
+                'label' => 'Description'
             ])
-            ->add('videos', UrlType::class, [
-                'label' => 'Add your URL Video',
-                'mapped' => false,
+            ->add('images', CollectionType::class, [
+                'entry_type' => ImageType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'allow_file_upload' => true,
                 'required' => false,
+                'label' => true, 
+                'by_reference' => false
+            ])
+            
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'label' => false,
             ])
            
             
