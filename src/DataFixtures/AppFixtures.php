@@ -139,7 +139,7 @@ class AppFixtures extends Fixture
                 }
             }
             
-            for($d = 1 ; $d<=3; $d++) {
+            for($d = 1 ; $d<=5; $d++) {
                 $trick = new trick();
                 $trick->setName("
                 trick n°$d")

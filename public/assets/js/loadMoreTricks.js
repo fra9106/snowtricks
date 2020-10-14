@@ -5,10 +5,10 @@ window.onload = () => {
         
         $("#loadMore").click(function(){ 
         $(".tricks-more:hidden").slice(0, 5).css("display", "flex");
-        if($(".tricks-more:hidden").length ===4){
+        if($(".tricks-more:hidden").length ===5){
             $(".scroll-to-up").show(); 
          }
-            if($(".tricks-more:hidden").length ===5){ 
+            if($(".tricks-more:hidden").length ===0){ 
                 $("#loadMore").attr("disabled", "disabled");
                 alert("No more!");
             }

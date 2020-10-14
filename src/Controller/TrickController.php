@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\Paginator;
 
 /**
 * @Route("/trick")
@@ -58,7 +59,7 @@ class TrickController extends AbstractController
                     );
                     
                     $img = new Images();
-                    $img->setName($fichier||null);
+                    $img->setName($fichier);
                     $trick->addImage($img);
                     if($img ===null){
                         $img->move($this->getParameter('img_profile_directory'),$fichier);
@@ -68,7 +69,7 @@ class TrickController extends AbstractController
                 $video = $form->get('videos')->getData();
                 
                     $url = new Videos();
-                    $url->setUrl($video||null);
+                    $url->setUrl($video);
                     $trick->addVideo($url);
                     //dd($trick);
 
@@ -86,25 +87,32 @@ class TrickController extends AbstractController
             }
             
             /**
-            * @Route("/{id}/show", name="trick_show", methods={"GET","POST"})
+            * @Route("/{id}/show/{page<\d+>?1}", name="trick_show", methods={"GET","POST"})
             */
-            public function show(CommentRepository $repo,Request $request, Trick $trick): Response
+            public function show(CommentRepository $repo,Request $request, Trick $trick, Paginator $paginator, $page): Response
             {
                 $form = $this->createForm(CommentType::class);
                 $form->handleRequest($request);
-                
-                return $this->render('trick/show.html.twig', [
-                    'trick' => $trick,
-                    'form' => $form->createView(),
-               
-                ]); 
-                
-            }
+                $paginator
+                            ->setEntityClass(Comment::class)
+                            ->setOrder(['creation_date' => 'DESC'])
+                            ->setPage($page)
+                            ->setAttribut(['trick' => $trick]);
+                           
+                            
+                    
+                    return $this->render('trick/show.html.twig', [
+                        'trick' => $trick,
+                        'paginator' => $paginator,
+                        'form' => $form->createView(),
+                        ]);
+                    
+                }
 
                 /**
-                * @Route("/{id}/newcomment", name="comment_new", methods={"GET","POST"})
+                * @Route("/{id}/newcomment/{page<\d+>?1}", name="comment_new", methods={"GET","POST"})
                 */
-                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager) : response
+                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager,Paginator $paginator, $page) : response
                 {
                     $this->denyAccessUnlessGranted('ROLE_USER');
                     $comment = new Comment();
@@ -122,9 +130,17 @@ class TrickController extends AbstractController
                             'id' => $trick->getId(),
                         ]);
                     }
+                    $paginator
+                            ->setEntityClass(Comment::class)
+                            ->setOrder(['creation_date' => 'DESC'])
+                            ->setPage($page)
+                            ->setAttribut(['trick' => $trick]);
+                           
+                            
                     
                     return $this->render('trick/show.html.twig', [
                         'trick' => $trick,
+                        'paginator' => $paginator,
                         'form' => $form->createView(),
                         ]);
                 }

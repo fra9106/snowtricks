@@ -1,13 +1,44 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Trick{% endblock %}
-
+{% form_theme form _self %}
 {% block body %}
 <div class="container mt-4 text-center"><br>
     <h1>Create new Trick</h1>
-
-    {{ include('trick/_form.html.twig') }}
-
+    <section class="add-trick">
+		
+		{{ form_start(form)}}
+		{{ form_row(form.name) }}
+		{{ form_row(form.description) }}
+		{{ form_row(form.category) }}
+		{{ form_row(form.images) }}
+		{{ form_row(form.videos) }}
+        <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+		{{ form_end(form) }}
+	</section>
     <a href="{{ path('trick_index') }}">back to list</a>
 </div>
+{% endblock %}
+
+{% block form_row %}
+	<div class="form-group">
+		{{ form_label(form) }}
+		{{ form_widget(form) }}
+	</div>
+{% endblock %}
+
+{% block _trick_images_row %}
+	<h3>Add pictures</h3>
+    {{ form_widget(form) }}
+    <div class="form-group" >
+		<button type="button" class="btn btn-primary btn-add-images" id="add-images">Add Pictures</button><br><br>
+		<button type="button" class="btn btn-danger btn-delete-images fas fa-trash-alt"></button>
+    </div>
+	
+{% endblock %}
+
+{% block _trick_images_entry_widjet %}
+	<div class="form-group">
+		{{ form_widget(form.name)}}
+	</div>
 {% endblock %}
