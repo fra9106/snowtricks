@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-
+use App\Entity\Images;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,12 +55,12 @@ class Trick
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $videos;
 
@@ -70,11 +70,16 @@ class Trick
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="string", length=70, nullable=true)
+     */
+    private $slug;
+    
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->videos = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,14 +179,14 @@ class Trick
     }
 
     /**
-     * @return Collection|Image[]
+     * @return Collection|Images[]
      */
     public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(Image $image): self
+    public function addImage(Images $image): self
     {
         if (!$this->images->contains($image)) {
             $this->images[] = $image;
@@ -191,7 +196,7 @@ class Trick
         return $this;
     }
 
-    public function removeImage(Image $image): self
+    public function removeImage(Images $image): self
     {
         if ($this->images->contains($image)) {
             $this->images->removeElement($image);
@@ -243,6 +248,18 @@ class Trick
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

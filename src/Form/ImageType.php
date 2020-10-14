@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Image;
+use App\Entity\Images;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +13,7 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('file', FileType::class, [
+        ->add('name', FileType::class, [
             'required' => false,
             ])
             /*->add('caption', TextType::class, [
@@ -25,7 +25,7 @@ class ImageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Image::class,
+            'data_class' => Images::class,
             // Configure your form options here
         ]);
     }
