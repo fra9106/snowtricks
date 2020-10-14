@@ -6,7 +6,7 @@ use App\Repository\ImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ImagesRepository::class)
+ * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
 class Images
 {
@@ -17,10 +17,16 @@ class Images
      */
     private $id;
 
+    
+
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=150, nullable=true)
      */
-    private $name;
+    private $caption;
+
+
+    private $file;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
@@ -33,17 +39,7 @@ class Images
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    
 
     public function getTrick(): ?Trick
     {
@@ -53,6 +49,46 @@ class Images
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of caption
+     */ 
+    public function getCaption()
+    {
+        return $this->caption;
+    }
+
+    /**
+     * Set the value of caption
+     *
+     * @return  self
+     */ 
+    public function setCaption($caption)
+    {
+        $this->caption = $caption;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of file
+     */ 
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set the value of file
+     *
+     * @return  self
+     */ 
+    public function setFile($file)
+    {
+        $this->file = $file;
 
         return $this;
     }

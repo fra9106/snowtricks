@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Trick;
 use App\Form\VideoType;
+use App\Form\ImageType;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +30,7 @@ class TrickType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'Description'
             ])
-            ->add('images', CollectionType::class, [
+            ->add('image', CollectionType::class, [
                 'entry_type' => ImageType::class,
                 'allow_add' => true,
                 'allow_delete' => true,

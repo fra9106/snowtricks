@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
-use App\Entity\Images;
+use App\Entity\Image;
 use App\Entity\Videos;
 use App\Entity\Comment;
 use App\Form\TrickType;
@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Paginator;
 
 /**
@@ -49,7 +50,7 @@ class TrickController extends AbstractController
             
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->addFlash('message', 'Trick added!');
-                $images = $form->get('images')->getData();
+                $images = $form->get('image')->getData();
                 foreach($images as $image) {
                     $fichier = md5(uniqid()) . '.' . $image->guessExtension();
                     
@@ -58,8 +59,8 @@ class TrickController extends AbstractController
                         $fichier
                     );
                     
-                    $img = new Images();
-                    $img->setName($fichier);
+                    $img = new Image();
+                    $img->setFile($fichier);
                     $trick->addImage($img);
                     if($img ===null){
                         $img->move($this->getParameter('img_profile_directory'),$fichier);
@@ -153,12 +154,15 @@ class TrickController extends AbstractController
                     $this->denyAccessUnlessGranted(TrickVoter::EDIT, $trick);
                     $trick->setUpdateDate(new \Datetime());
                     
+                    $originalPictures = new ArrayCollection();
+                    $originalVideos = new ArrayCollection();
+
                     $form = $this->createForm(TrickType::class, $trick);
                     $form->handleRequest($request);
                     
                     if ($form->isSubmitted() && $form->isValid()) {
                         
-                        $images = $form->get('images')->getData();
+                        $images = $form->get('image')->getData();
                         foreach($images as $image) {
                             $fichier = md5(uniqid()) . '.' . $image->guessExtension();
                             
@@ -167,14 +171,14 @@ class TrickController extends AbstractController
                                 $fichier
                             );
                             
-                            $img = new Images();
-                            $img->setName($fichier);
+                            $img = new Image();
+                            $img->setFile($fichier);
                             $trick->addImage($img);
                         }
                         $video = $form->get('videos')->getData();
                 
                     $url = new Videos();
-                    $url->setUrl($video||null);
+                    $url->setUrl($video);
                     $trick->addVideo($url);
                     //dd($trick);
 
@@ -208,13 +212,13 @@ class TrickController extends AbstractController
                 /**
                 * @Route("/delete/image/{id}", name="trick_delete_image", methods={"DELETE"})
                 */
-                public function deleteImage(Images $image, Request $request)
+                public function deleteImage(Image $image, Request $request)
                 {
                     $data = json_decode($request->getContent(), true);
                     // We check if the token is valid
                     if($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])){
                         // We get the name of the image
-                        $name = $image->getName();
+                        $name = $image->getFile();
                         // We delete the file
                         unlink($this->getParameter('images_directory').'/'.$name);
                         // We delete the entry from the database
