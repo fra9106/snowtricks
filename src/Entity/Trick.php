@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Images;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,7 +39,7 @@ class Trick
     private $creation_date;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $update_date;
 
@@ -59,7 +60,7 @@ class Trick
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $videos;
 
@@ -68,6 +69,11 @@ class Trick
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="string", length=70, nullable=true)
+     */
+    private $slug;
     
     public function __construct()
     {
@@ -246,7 +252,16 @@ class Trick
         return $this;
     }
 
-    
-   
-    
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
 }

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=ImagesRepository::class)
@@ -38,7 +40,7 @@ class Images
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(UploadedFile $name = null): self
     {
         $this->name = $name;
 

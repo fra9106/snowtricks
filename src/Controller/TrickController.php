@@ -59,7 +59,7 @@ class TrickController extends AbstractController
                     );
                     
                     $img = new Images();
-                    $img->setName($fichier);
+                    $img->setName();
                     $trick->addImage($img);
                     if($img ===null){
                         $img->move($this->getParameter('img_profile_directory'),$fichier);
@@ -168,7 +168,7 @@ class TrickController extends AbstractController
                             );
                             
                             $img = new Images();
-                            $img->setName($fichier);
+                            $img->setName();
                             $trick->addImage($img);
                         }
                         $video = $form->get('videos')->getData();
@@ -260,4 +260,3 @@ class TrickController extends AbstractController
                 }
             }*/
             }
-            

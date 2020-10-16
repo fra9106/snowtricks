@@ -14,11 +14,11 @@ class ImageType extends AbstractType
     {
         $builder
         ->add('name', FileType::class, [
-            'label' => 'Add your picture',
-            'multiple' => true,
             'required' => false,
-            
-        ])
+            ])
+            /*->add('caption', TextType::class, [
+                'placeholder' => 'Titre de l\'image'
+            ])*/
         ;
     }
 
