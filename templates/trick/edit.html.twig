@@ -3,15 +3,48 @@
 {% block title %}Edit Trick{% endblock %}
 
 {% block body %}
-<div class="container mt-4 text-center"><br>
-    <h1>Edit Trick</h1>
+<div class="container text-center border">
+    <div class="col-sm-12 mb-4">
+        <div class=" col-sm-12 align-items-center trick-name ">
+            <h2>{{ trick.name }}</h2>
+            {% for image in trick.pictures | slice(0,1) %}
+            {% if image.file %}
+                <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.file) }}" alt="Image" height="100"width="150" >
+                {% else %}
+                <img class="image-trick rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
+                {% endif %}
+                {% endfor %}
+               
+                
+                <div class="container text-center">
+                    <div class="col-sm-12 mb-4 d-flex text-align-inline justify-content-center">
+                    
+                    {% for image in trick.pictures %}
+                        <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
+                            <img class="" src="{{ asset('assets/uploads/' ~ image.file) }}" alt="Image" width="150">
+                            <a href="{{ path('trick_delete_image', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id) }}">Delete</a>
+                            {% endfor %}
+                        </div>    
+                            {% for video in trick.videos %}
+                        <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
+                            <iframe class="image-tricks rounded mx-2 {{ trick.id }}" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <a href="{{ path('trick_delete_video', {id: video.id}) }}" data-video-delete data-token="{{ csrf_token('delete' ~ video.id) }}">Delete</a>
+                            {% endfor %}
+                        </div>
+                       
+                    
+                    </div>
+                </div>
 
-    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
+            {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('trick_index') }}">back to list</a>
+            <a href="{{ path('trick_index') }}">back to list</a>
 
-    {{ include('trick/_delete_form.html.twig') }}
-</div>
+            {{ include('trick/_delete_form.html.twig') }}
+            </div>
+            </div>
+            </div>
+
 {% endblock %}
 
 {% block javascripts %}

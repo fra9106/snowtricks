@@ -20,10 +20,10 @@ class Images
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $name;
+    private $file;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="pictures")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
@@ -33,14 +33,14 @@ class Images
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getFile(): ?string
     {
-        return $this->name;
+        return $this->file;
     }
 
-    public function setName(string $name): self
+    public function setFile(string $file): self
     {
-        $this->name = $name;
+        $this->file = $file;
 
         return $this;
     }

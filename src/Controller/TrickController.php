@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\Paginator;
 
 /**
 * @Route("/trick")
@@ -27,9 +28,9 @@ class TrickController extends AbstractController
     * @Route("/", name="trick_index", methods={"GET"})
     */
     public function index(TrickRepository $trickRepository): Response
-    {
+    { 
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+            'tricks' => $trickRepository->findBy([],['creation_date' => 'DESC'])
             ]);
         }
         
@@ -58,8 +59,11 @@ class TrickController extends AbstractController
                     );
                     
                     $img = new Images();
-                    $img->setName($fichier);
+                    $img->setFile($fichier);
                     $trick->addImage($img);
+                    if($img ===null){
+                        $img->move($this->getParameter('img_profile_directory'),$fichier);
+                    }
                 }
 
                 $video = $form->get('videos')->getData();
@@ -83,26 +87,32 @@ class TrickController extends AbstractController
             }
             
             /**
-            * @Route("/{id}/show", name="trick_show", methods={"GET","POST"})
+            * @Route("/{id}/show/{page<\d+>?1}", name="trick_show", methods={"GET","POST"})
             */
-            public function show(CommentRepository $repo,Request $request, Trick $trick): Response
+            public function show(CommentRepository $repo,Request $request, Trick $trick, Paginator $paginator, $page): Response
             {
                 $form = $this->createForm(CommentType::class);
                 $form->handleRequest($request);
-                $comments = $repo->findBy([],['creation_date' => 'DESC']);
-                return $this->render('trick/show.html.twig', [
-                    'trick' => $trick,
-                    'comment' => $comments,
-                    'form' => $form->createView(),
-               
-                ]);
-                
-            }
+                $paginator
+                            ->setEntityClass(Comment::class)
+                            ->setOrder(['creation_date' => 'DESC'])
+                            ->setPage($page)
+                            ->setAttribut(['trick' => $trick]);
+                           
+                            
+                    
+                    return $this->render('trick/show.html.twig', [
+                        'trick' => $trick,
+                        'paginator' => $paginator,
+                        'form' => $form->createView(),
+                        ]);
+                    
+                }
 
                 /**
-                * @Route("/{id}/newcomment", name="comment_new", methods={"GET","POST"})
+                * @Route("/{id}/newcomment/{page<\d+>?1}", name="comment_new", methods={"GET","POST"})
                 */
-                public function newComment(CommentRepository $repo, Request $request, Trick $trick, EntityManagerInterface $manager) : response
+                public function newComment(Request $request, Trick $trick, EntityManagerInterface $manager,Paginator $paginator, $page) : response
                 {
                     $this->denyAccessUnlessGranted('ROLE_USER');
                     $comment = new Comment();
@@ -120,9 +130,17 @@ class TrickController extends AbstractController
                             'id' => $trick->getId(),
                         ]);
                     }
+                    $paginator
+                            ->setEntityClass(Comment::class)
+                            ->setOrder(['creation_date' => 'DESC'])
+                            ->setPage($page)
+                            ->setAttribut(['trick' => $trick]);
+                           
+                            
                     
                     return $this->render('trick/show.html.twig', [
                         'trick' => $trick,
+                        'paginator' => $paginator,
                         'form' => $form->createView(),
                         ]);
                 }
@@ -150,13 +168,13 @@ class TrickController extends AbstractController
                             );
                             
                             $img = new Images();
-                            $img->setName($fichier);
+                            $img->setFile($fichier);
                             $trick->addImage($img);
                         }
                         $video = $form->get('videos')->getData();
                 
                     $url = new Videos();
-                    $url->setUrl($video);
+                    $url->setUrl($video||null);
                     $trick->addVideo($url);
                     //dd($trick);
 
@@ -190,12 +208,13 @@ class TrickController extends AbstractController
                 /**
                 * @Route("/delete/image/{id}", name="trick_delete_image", methods={"DELETE"})
                 */
-                public function deleteImage(Images $image, Request $request){
+                public function deleteImage(Images $image, Request $request)
+                {
                     $data = json_decode($request->getContent(), true);
                     // We check if the token is valid
                     if($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])){
                         // We get the name of the image
-                        $name = $image->getName();
+                        $name = $image->getFile();
                         // We delete the file
                         unlink($this->getParameter('images_directory').'/'.$name);
                         // We delete the entry from the database
@@ -208,5 +227,37 @@ class TrickController extends AbstractController
                         return new JsonResponse(['error' => 'Token Invalide'], 400);
                     }
                 }
+
+                /**
+                 * @Route("/delete/video/{id}", name="trick_delete_video", methods={"DELETE"})
+                 */
+                public function deleteVideo(Videos $video, Request $request)
+                {
+                    $this->denyAccessUnlessGranted('ROLE_USER');
+                    if ($this->isCsrfTokenValid('delete'.$video->getId(), $request->request->get('_token'))) {
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->remove($video);
+                        $entityManager->flush();
+                    }
+                    return $this->redirectToRoute('trick_index');
+                }
+
+                /**
+                 * @Route("/delete/videos/{id}", name="trick_delete_videos", methods={"DELETE"})
+                 */
+               /* public function deleteVideos(Videos $video, Request $request)
+                {
+                    $data = json_decode($request->getContent(), true);
+                    if($this->isCsrfTokenValid('delete'.$video->getId(), $data['_token'])){
+                        
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->remove($video);
+                        $entityManager->flush();
+                    
+                    return new JsonResponse(['success' => 1]);
+                }else{
+                    return new JsonResponse(['error' => 'Token Invalide'], 400);
+                }
+            }*/
             }
             

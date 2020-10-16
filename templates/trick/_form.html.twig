@@ -2,18 +2,7 @@
     {{ form_widget(form) }}
 
     {% if app.request.attributes.get('_route') == 'trick_edit' %}
-    <h2>Pictures</h2>
-    <div class="container text-center border">
-        <div class="col-sm-12 mb-4 d-flex text-align-inline justify-content-center">
-        
-        {% for image in trick.images %}
-            <div class="align-items-center my-4">
-                <img class="image-tricks rounded mx-2" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" width="150">
-                <a href="{{ path('trick_delete_image', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id) }}">Delete</a>
-            </div>
-        {% endfor %}
-        </div>
-        </div>
+    
     {% endif %}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

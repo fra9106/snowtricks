@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\TrickRepository;
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @UniqueEntity(
+ * fields = {"name"},
+ * message = "Le nom de cette figure déjà utilisé, veuillez taper une autre nom de figure !")
  */
 class Trick
 {
@@ -40,7 +43,7 @@ class Trick
     private $update_date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="trick")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="trick", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
@@ -53,7 +56,7 @@ class Trick
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
-    private $images;
+    private $pictures;
 
     /**
      * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true,cascade={"persist"})
@@ -61,7 +64,7 @@ class Trick
     private $videos;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="user")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -69,7 +72,7 @@ class Trick
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
     }
 
@@ -172,15 +175,15 @@ class Trick
     /**
      * @return Collection|Images[]
      */
-    public function getImages(): Collection
+    public function getPictures(): Collection
     {
-        return $this->images;
+        return $this->pictures;
     }
 
     public function addImage(Images $image): self
     {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
+        if (!$this->pictures->contains($image)) {
+            $this->pictures[] = $image;
             $image->setTrick($this);
         }
 
@@ -189,8 +192,8 @@ class Trick
 
     public function removeImage(Images $image): self
     {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
+        if ($this->pictures->contains($image)) {
+            $this->pictures->removeElement($image);
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
