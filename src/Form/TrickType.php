@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Trick;
 use App\Form\ImageType;
 use App\Form\VideoType;
+use App\Form\ImageType;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
