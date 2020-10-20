@@ -39,7 +39,7 @@ class Trick
     private $creation_date;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $update_date;
 
@@ -60,7 +60,7 @@ class Trick
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
     private $videos;
 
