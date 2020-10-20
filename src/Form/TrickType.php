@@ -29,7 +29,7 @@ class TrickType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'Description'
             ])
-            ->add('pictures', CollectionType::class, [
+            ->add('images', CollectionType::class, [
                 'entry_type' => ImageType::class,
                 'allow_add' => true,
                 'allow_delete' => true,

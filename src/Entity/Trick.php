@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Images;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -56,7 +57,7 @@ class Trick
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="trick", orphanRemoval=true, cascade={"persist"})
      */
-    private $pictures;
+    private $images;
 
     /**
      * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick", orphanRemoval=true,cascade={"persist"})
@@ -68,11 +69,16 @@ class Trick
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="string", length=70)
+     */
+    private $slug;
     
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->pictures = new ArrayCollection();
+        $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
     }
 
@@ -89,7 +95,7 @@ class Trick
     public function setName(string $name): self
     {
         $this->name = $name;
-
+        $this->setSlug($this->name);
         return $this;
     }
 
@@ -175,15 +181,15 @@ class Trick
     /**
      * @return Collection|Images[]
      */
-    public function getPictures(): Collection
+    public function getImages(): Collection
     {
-        return $this->pictures;
+        return $this->images;
     }
 
     public function addImage(Images $image): self
     {
-        if (!$this->pictures->contains($image)) {
-            $this->pictures[] = $image;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
             $image->setTrick($this);
         }
 
@@ -192,8 +198,8 @@ class Trick
 
     public function removeImage(Images $image): self
     {
-        if ($this->pictures->contains($image)) {
-            $this->pictures->removeElement($image);
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
@@ -246,7 +252,26 @@ class Trick
         return $this;
     }
 
+    public function slugify($string, $empty = '', $delimiter = '-') 
+    {   
+        $sluggy = iconv('UTF-8', 'us-ascii//TRANSLIT', $string);
+        $sluggy = preg_replace("#[^\w/|+ -]#", $empty, $sluggy);
+        $sluggy = strtolower($sluggy);
+        $sluggy = preg_replace("#[\/_|+ -]+#", $delimiter, $sluggy);
+        $sluggy = trim($sluggy, $delimiter);
+
+        return $sluggy;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
     
-   
-    
+    public function setSlug($slug): self
+    {
+        $this->slug = $this->slugify($slug);
+
+        return $this;
+    }
 }

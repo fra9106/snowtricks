@@ -23,7 +23,7 @@ class Images
     private $file;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="images")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
