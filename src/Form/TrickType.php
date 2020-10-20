@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Trick;
-use App\Form\VideoType;
 use App\Form\ImageType;
+use App\Form\VideoType;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,7 +13,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-
 
 class TrickType extends AbstractType
 {
@@ -36,7 +35,7 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
                 'allow_file_upload' => true,
                 'required' => false,
-                'label' => true, 
+                'entry_options' => ['label' => false],
                 'by_reference' => false
             ])
             
@@ -46,11 +45,8 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
                 'required' => false,
                 'by_reference' => false,
-                'label' => false,
-            ])
-           
-            
-        ;
+                'entry_options' => ['label' => false],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
