@@ -176,7 +176,12 @@ class TrickController extends AbstractController
                             $trick->addImage($img);
                         }
                         $this->getDoctrine()->getManager()->flush();
-                        
+
+                        $videos = $form->get('videos')->getData();
+                        foreach ($videos as $video) {
+                            $video->getTrick()->removeElement($trick);
+                            $this->manager->persist($video);
+                        }
                         return $this->redirectToRoute('trick_index'
                     );
                 }
