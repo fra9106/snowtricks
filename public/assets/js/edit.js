@@ -1,5 +1,5 @@
 window.onload = () => {
-    let videos = document.querySelectorAll("[data-delete]")
+    let videos = document.querySelectorAll("[data-delete-video]")
     for(video of videos){
         video.addEventListener("click", function(e){
             e.preventDefault()
@@ -8,4 +8,15 @@ window.onload = () => {
             }
         })
     }
+
+    let images = document.querySelectorAll("[data-delete-picture]")
+    for(image of images){
+        image.addEventListener("click", function(e){
+            e.preventDefault()
+            if(confirm("Do you want to delete this picture ?")){
+            this.parentElement.remove();
+            }
+        })
+    }
+
 }
