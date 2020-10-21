@@ -1,12 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Edit Trick{% endblock %}
-
+{% form_theme form _self %}
 {% block body %}
 <div class="container text-center border">
     <div class="col-sm-12 mb-4">
         <div class=" col-sm-12 align-items-center trick-name ">
             <h2>{{ trick.name }}</h2>
+            {% if trick is not empty %}
             {% for image in trick.images | slice(0,1) %}
             {% if image.file %}
                 <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.file) }}" alt="Image" height="100"width="150" >
@@ -14,7 +15,7 @@
                 <img class="image-trick rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
                 {% endif %}
                 {% endfor %}
-               
+                {% endif %}
                 
                 <div class="container text-center">
                     <div class="col-sm-12 mb-4 d-flex text-align-inline justify-content-center">
@@ -27,26 +28,88 @@
                         </div>    
                             {% for video in trick.videos %}
                         <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
-                            <iframe class="image-tricks rounded mx-2 {{ trick.id }}" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <a href="#{#{{ path('trick_delete_video', {id: video.id}) }}" data-video-delete data-token="{{ csrf_token('delete' ~ video.id) }}#}">Delete</a>
+                            <div class= "align-items-center d-flex text-align-inline justify-content-center">
+                            <iframe class="image-tricks rounded mx-2 {{ video.id }}" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <a class="btn-delete-video btn btn-danger fas fa-trash-alt" data-target="{{ video.id }}" href="" data-delete></a>
+                            </div>
                             {% endfor %}
                         </div>
-                       
-                    
                     </div>
                 </div>
+                
 
             {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
-
             <a href="{{ path('trick_index') }}">back to list</a>
 
             {{ include('trick/_delete_form.html.twig') }}
+        </div>
+    </div>
+    </div>
+            {% endblock %}
+            {% block form_row %} 
+            <div class="form-group">
+                {#{{dump()}}#}
+                {{ form_label(form) }}
+                {{ form_widget(form) }}
             </div>
+        {% endblock %}
+        {% block _trick_images_row %}
+            <h3>Add pictures</h3>
+            {{ form_widget(form) }}
+            <div class= >
+                <button type="button" class="btn btn-primary btn-add-images" id="add-images">Add Picture</button>
             </div>
+        {% endblock %}
+        {% block _trick_images_entry_widget %}
+        <div class="form-group" id="block_{{id}}">
+            <div class="row">
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col">
+                            {{ form_widget(form.file)}}
+                        </div>
+                    </div>	
+                </div>
+                <div class="col-2">
+                    <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger fas fa-trash-alt"></button>
+                </div>
             </div>
+        </div>
+        {% endblock %}
+        {% block _trick_videos_row %}
+            <h3>Add videos</h3>
+            {{ form_widget(form) }}
+            <button type="button" class="btn btn-primary btn-add-videos" id="add_videos">Add video</button><br><br>
+        {% endblock %}
+        {% block _trick_videos_entry_widget %}
+        <div class="form-group" id="block_{{id}}">
+            <div class="row">
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col">
+                            {{ form_widget(form.url) }}
+                        </div>
+                        <div class="col">
+                            {{ form_widget(form.name) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger fas fa-trash-alt"></button>
+                </div>
+            </div>
+        </div>
+        
+        
+        
 
-{% endblock %}
+            
+            
+
+            {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/pics.js') }}"></script>
+    <script src="{{ asset('assets/js/edit.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/js/handleFormPics.js') }}"></script>
 {% endblock %}
