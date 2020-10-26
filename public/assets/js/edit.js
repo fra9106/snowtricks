@@ -1,5 +1,5 @@
 window.onload = () => {
-    let videos = document.querySelectorAll("[data-delete-video]")
+    /*let videos = document.querySelectorAll("[data-delete-video]")
     for(video of videos){
         video.addEventListener("click", function(e){
             e.preventDefault()
@@ -7,7 +7,7 @@ window.onload = () => {
             this.parentElement.remove();
             }
         })
-    }
+    }*/
 
     let images = document.querySelectorAll("[data-delete-picture]")
     for(image of images){
@@ -19,4 +19,13 @@ window.onload = () => {
         })
     }
 
+    function handleDeleteButtons() {
+        $('a[data-action="delete"]').click(function(){
+            const target = this.dataset.target;
+            $(target).remove();
+        });
+    }
+    
+    handleDeleteButtons();
+    
 }

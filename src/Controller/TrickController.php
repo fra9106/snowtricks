@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
-use App\Entity\Images;
-use App\Entity\Videos;
+//use App\Entity\Images;
+//use App\Entity\Videos;
 use App\Entity\Comment;
 use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Service\Paginator;
+use App\Service\FileUploader;
 use App\Security\Voter\TrickVoter;
 use App\Repository\TrickRepository;
 use App\Repository\CommentRepository;
@@ -17,15 +18,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
 * @Route("/trick")
 */
 class TrickController extends AbstractController
 {
+
+     /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
+
+    public function __construct(EntityManagerInterface $manager) {
+        $this->manager = $manager;
+    }
+
     /**
     * @Route("/", name="trick_index", methods={"GET"})
     */
@@ -39,7 +49,7 @@ class TrickController extends AbstractController
         /**
         * @Route("/new", name="trick_new", methods={"GET","POST"})
         */
-        public function new(Request $request): Response
+        public function new(Request $request, FileUploader $fileUploader): Response
         {
             $this->denyAccessUnlessGranted('ROLE_USER');
             $trick = new Trick();
@@ -49,35 +59,32 @@ class TrickController extends AbstractController
             
             $form = $this->createForm(TrickType::class, $trick);
             $form->handleRequest($request);
-            
+            //dd($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->addFlash('message', 'Trick added!');
+                //$this->addFlash('message', 'Trick added!');
             
-                $images = $form->get('images')->getData();
+                $images = $request->files->get('trick')['images'];
+                //$images = $form->get('images')->getData();
+                //$images = $form['images']->getData();
+                //dd($images);
+
+                foreach ($images as $image) {
+                    $file = $image->getFile();
+                    if($file) {
+                        $newFilename = $fileUploader->upload($file, 'images');
+                        $image->setFile($newFilename);
+                    } 
+                   $image->setTrick($trick);
+                   $this->manager->persist($image);
+               }
                 
-                foreach($images as $image) {
-                    $fichier = md5(uniqid()) . '.' . $image->guessExtension();
-                    
-                    $image->move(
-                        $this->getParameter('images_directory'),
-                        $fichier
-                    );
-                    
-                    $img = new Images();
-                    $img->setFile($fichier);
-                    $trick->addImage($img);
-                    if($img ===null){
-                        $img->move($this->getParameter('img_profile_directory'),$fichier);
-                    }
-                }//dd($trick);
 
                     foreach($trick->getVideos() as $video) {
                         $video->setTrick($trick);
                     
                     }
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($trick);
-                $entityManager->flush();
+                    $this->manager->persist($trick);
+                    $this->manager->flush();
                 
                 return $this->redirectToRoute('trick_index');
             }
@@ -88,6 +95,50 @@ class TrickController extends AbstractController
                 ]);
             }
             
+            /**
+                * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
+                */
+                public function edit(Request $request, Trick $trick): Response
+                {
+                    $this->denyAccessUnlessGranted(TrickVoter::EDIT, $trick);
+                    $trick->setUpdateDate(new \Datetime());
+                    
+                    $form = $this->createForm(TrickType::class, $trick);
+                    $form->handleRequest($request);
+                    
+                    if ($form->isSubmitted() && $form->isValid()) {
+                        
+                       /* $images = $form->get('images')->getData();
+                        foreach($images as $image) {
+                            $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+                            
+                            $image->move(
+                                $this->getParameter('images_directory'),
+                                $fichier
+                            );
+                            
+                            $img = new Images();
+                            $img->setFile($fichier);
+                            $trick->addImage($img);
+                        }
+                        $this->getDoctrine()->getManager()->flush();
+
+                        $videos = $form->get('videos')->getData();
+                        foreach ($videos as $video) {
+                            $video->getTrick()->removeElement($trick);
+                            $this->manager->persist($video);
+                        }
+                        return $this->redirectToRoute('trick_index'
+                    );*/
+                }
+                
+                return $this->render('trick/edit.html.twig', [
+                    'trick' => $trick,
+                    'form' => $form->createView(),
+                    ]);
+                }
+                
+
             /**
             * @Route("/{slug}/show/{page<\d+>?1}", name="trick_show", methods={"GET","POST"})
             */
@@ -148,49 +199,6 @@ class TrickController extends AbstractController
                         'paginator' => $paginator,
                         'form' => $form->createView(),
                         ]);
-                }
-                
-                /**
-                * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
-                */
-                public function edit(Request $request, Trick $trick): Response
-                {
-                    $this->denyAccessUnlessGranted(TrickVoter::EDIT, $trick);
-                    $trick->setUpdateDate(new \Datetime());
-                    
-                    $form = $this->createForm(TrickType::class, $trick);
-                    $form->handleRequest($request);
-                    
-                    if ($form->isSubmitted() && $form->isValid()) {
-                        
-                        $images = $form->get('images')->getData();
-                        foreach($images as $image) {
-                            $fichier = md5(uniqid()) . '.' . $image->guessExtension();
-                            
-                            $image->move(
-                                $this->getParameter('images_directory'),
-                                $fichier
-                            );
-                            
-                            $img = new Images();
-                            $img->setFile($fichier);
-                            $trick->addImage($img);
-                        }
-                        $this->getDoctrine()->getManager()->flush();
-
-                        $videos = $form->get('videos')->getData();
-                        foreach ($videos as $video) {
-                            $video->getTrick()->removeElement($trick);
-                            $this->manager->persist($video);
-                        }
-                        return $this->redirectToRoute('trick_index'
-                    );
-                }
-                
-                return $this->render('trick/edit.html.twig', [
-                    'trick' => $trick,
-                    'form' => $form->createView(),
-                    ]);
                 }
                 
                 /**

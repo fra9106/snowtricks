@@ -59,7 +59,7 @@
                 {% for comment in paginator.data %}
                 <div class="border align-items-center d-flex text-align-inline justify-content-center  my-4">
                     {% if comment.user.avatar %}
-                    <img class="rounded mx-2" src="{{ asset('assets/uploads/' ~ comment.user.avatar) }}" alt="Image" height="100"width="100">
+                    <img class="rounded mx-2" src="{{ asset('assets/avatars/img_profile/' ~ comment.user.avatar) }}" alt="Image" height="100"width="100">
                     {% else %}
                     <img class="rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
                     {% endif %}
