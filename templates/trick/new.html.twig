@@ -6,39 +6,67 @@
 <div class="container mt-4 text-center"><br>
     <h1>Create new Trick</h1>
     <section class="add-trick">
-		
-		{{ form_start(form)}}
-		{{ form_row(form.name) }}
-		{{ form_row(form.description) }}
-		{{ form_row(form.category) }}
-		{{ form_row(form.images) }}
-		{{ form_row(form.videos) }}
-        <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
-		{{ form_end(form) }}
+		{{ include('trick/_form.html.twig') }}
 	</section>
     <a href="{{ path('trick_index') }}">back to list</a>
 </div>
 {% endblock %}
-
-{% block form_row %}
+{% block form_row %} 
 	<div class="form-group">
+		{#{{dump()}}#}
 		{{ form_label(form) }}
 		{{ form_widget(form) }}
 	</div>
 {% endblock %}
-
 {% block _trick_images_row %}
 	<h3>Add pictures</h3>
     {{ form_widget(form) }}
-    <div class="form-group" >
-		<button type="button" class="btn btn-primary btn-add-images" id="add-images">Add Pictures</button><br><br>
-		<button type="button" class="btn btn-danger btn-delete-images fas fa-trash-alt"></button>
-    </div>
-	
+    <div class= >
+		<button type="button" class="btn btn-primary btn-add-images" id="add-images">Add Picture</button>
+	</div>
+{% endblock %}
+{% block _trick_images_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+	<div class="row">
+		<div class="col-10">
+			<div class="row">
+				<div class="col">
+					{{ form_widget(form.file)}}
+				</div>
+			</div>	
+		</div>
+		<div class="col-2">
+			<button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger fas fa-trash-alt"></button>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block _trick_videos_row %}
+	<h3>Add videos</h3>
+	{{ form_widget(form) }}
+	<button type="button" class="btn btn-primary btn-add-videos" id="add_videos">Add video</button><br><br>
+{% endblock %}
+{% block _trick_videos_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+	<div class="row">
+		<div class="col-10">
+			<div class="row">
+				<div class="col">
+					{{ form_widget(form.url) }}
+				</div>
+				<div class="col">
+					{{ form_widget(form.name) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger fas fa-trash-alt"></button>
+		</div>
+	</div>
+</div>
 {% endblock %}
 
-{% block _trick_images_entry_widjet %}
-	<div class="form-group">
-		{{ form_widget(form.name)}}
-	</div>
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="{{ asset('assets/js/handleFormPics.js') }}"></script>
 {% endblock %}

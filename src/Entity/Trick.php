@@ -71,7 +71,7 @@ class Trick
     private $user;
 
     /**
-     * @ORM\Column(type="string", length=70, nullable=true)
+     * @ORM\Column(type="string", length=70)
      */
     private $slug;
     
@@ -95,7 +95,7 @@ class Trick
     public function setName(string $name): self
     {
         $this->name = $name;
-
+        $this->setSlug($this->name);
         return $this;
     }
 
@@ -252,16 +252,26 @@ class Trick
         return $this;
     }
 
+    public function slugify($string, $empty = '', $delimiter = '-') 
+    {   
+        $sluggy = iconv('UTF-8', 'us-ascii//TRANSLIT', $string);
+        $sluggy = preg_replace("#[^\w/|+ -]#", $empty, $sluggy);
+        $sluggy = strtolower($sluggy);
+        $sluggy = preg_replace("#[\/_|+ -]+#", $delimiter, $sluggy);
+        $sluggy = trim($sluggy, $delimiter);
+
+        return $sluggy;
+    }
+
     public function getSlug(): ?string
     {
         return $this->slug;
     }
-
-    public function setSlug(?string $slug): self
+    
+    public function setSlug($slug): self
     {
-        $this->slug = $slug;
+        $this->slug = $this->slugify($slug);
 
         return $this;
     }
-
 }

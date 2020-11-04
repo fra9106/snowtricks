@@ -14,14 +14,14 @@
             <h2>{{ trick.name }}</h2>
                 {% if trick is not empty %}
                 {% for image in trick.images | slice(0,1) %}
-                <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
+                <img class="image-trick rounded" src="{{ asset('assets/uploads/' ~ image.file) }}" alt="Image" height="100"width="150" >
                 {% else %}
                 <img class="image-trick rounded mx-2" src="{{ asset('assets/img_default/logosnow.png') }}" alt="Image">
                 {% endfor %}
                 {% endif %}
                 <div class="align-items-center d-flex text-align-inline justify-content-center my-4">
                     {% for image in trick.images %}
-                    <img class="image-tricks rounded mx-2" src="{{ asset('assets/uploads/' ~ image.name) }}" alt="Image" height="100"width="150" >
+                    <img class="image-tricks rounded mx-2" src="{{ asset('assets/uploads/' ~ image.file) }}" alt="Image" height="100"width="150" >
                     {% endfor %}
                     {% for video in trick.videos %}
                     <iframe class="col-md-3 col-sm-12 h-100 w-100 {{ trick.id }}" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -59,7 +59,7 @@
                 {% for comment in paginator.data %}
                 <div class="border align-items-center d-flex text-align-inline justify-content-center  my-4">
                     {% if comment.user.avatar %}
-                    <img class="rounded mx-2" src="{{ asset('assets/uploads/' ~ comment.user.avatar) }}" alt="Image" height="100"width="100">
+                    <img class="rounded mx-2" src="{{ asset('assets/avatars/img_profile/' ~ comment.user.avatar) }}" alt="Image" height="100"width="100">
                     {% else %}
                     <img class="rounded mx-2" src="{{ asset('assets/avatars/default.jpg') }}" alt="Image" height="100"width="100">
                     {% endif %}
@@ -76,21 +76,21 @@
 		            {% set pages = paginator.pages %}
                     <ul class="pagination">
                       <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                        <a class="page-link" href="{{ path('trick_show', {'id': trick.id, 'page': page - 1}) }}">Previous</a>
+                        <a class="page-link" href="{{ path('trick_show', {'slug': trick.slug, 'page': page - 1}) }}">Previous</a>
                       </li>
                       {% for i in 1..pages %}
                       <li class="page-item {% if page == i %}active{% endif %}">
-                          <a class="page-link" href="{{ path('trick_show', {'id': trick.id, 'page': i}) }}">{{ i }}</a>
+                          <a class="page-link" href="{{ path('trick_show', {'slug': trick.slug, 'page': i}) }}">{{ i }}</a>
                       </li>
                         {% endfor %}
                       <li class="page-item {% if page == pages %}disabled{% endif %}">
-                        <a class="page-link" href="{{ path('trick_show', {'id': trick.id, 'page': page + 1}) }}">Next</a>
+                        <a class="page-link" href="{{ path('trick_show', {'slug': trick.slug, 'page': page + 1}) }}">Next</a>
                       </li>
                     </ul>
                 </div>
                 {% endif %}
                 <a href="{{ path('home') }}">back to list</a>
-                <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
+                <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">edit</a>
                 {{ include('trick/_delete_form.html.twig') }}
             </div>
             {% block javascripts %}

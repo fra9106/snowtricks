@@ -5,10 +5,13 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     images_directory: '%kernel.project_dir%/public/assets/uploads'
-    img_profile_directory: '%kernel.project_dir%/public/assets/img_profile'
+    img_profile_directory: '%kernel.project_dir%/public/assets/avatars/img_profile'
 
 services:
     # default configuration for services in *this* file
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/uploads' #'%images_directory%'
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

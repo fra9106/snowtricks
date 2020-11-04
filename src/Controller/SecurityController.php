@@ -33,7 +33,7 @@ class SecurityController extends AbstractController
                 $fichier = md5(uniqid()) . '.' . $avatar->guessExtension();
                 
                 $avatar->move(
-                    $this->getParameter('images_directory'),
+                    $this->getParameter('img_profile_directory'),
                     $fichier
                 );
                 $user->setAvatar($fichier);
